@@ -1,13 +1,17 @@
 {
-	"name": "fuel/oil",
+	"name": "feldsam-inc/fuel-oil",
 	"description" : "FuelPHP 1.x Oil Package",
 	"type": "fuel-package",
-	"homepage": "https://github.com/fuel/oil",
+	"homepage": "https://github.com/FELDSAM-INC/fuel-oil",
 	"license": "MIT",
 	"authors": [
 		{
 			"name": "FuelPHP Development Team",
 			"email": "team@fuelphp.com"
+		},
+		{
+			"name": "Kristian Feldsam",
+			"email": "feldsam@gmail.com"
 		}
 	],
 	"require": {
