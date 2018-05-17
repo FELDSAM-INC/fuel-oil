@@ -88,7 +88,7 @@ class Generate_Migration_Actions
 
 		// generate the up() code
 		$up = <<<UP
-		\DBUtil::create_table('{$table_prefix}{$subjects[1]}', array(
+		DBUtil::create_table('{$table_prefix}{$subjects[1]}', array(
 $field_up_str
 		)$pk_str);
 UP;
@@ -134,7 +134,7 @@ UP;
 		}
 
 		$down .= <<<DOWN
-		\DBUtil::drop_table('{$table_prefix}{$subjects[1]}');
+		DBUtil::drop_table('{$table_prefix}{$subjects[1]}');
 DOWN;
 
 		return array($up, $down);
@@ -204,12 +204,12 @@ DOWN;
 		list($field_up_str, $field_down_str, $not_used, $not_used) = static::_generate_field_string($fields);
 
 		$up = <<<UP
-		\DBUtil::add_fields('{$subjects[1]}', array(
+		DBUtil::add_fields('{$subjects[1]}', array(
 $field_up_str
 		));
 UP;
 		$down = <<<DOWN
-		\DBUtil::drop_fields('{$subjects[1]}', array(
+		DBUtil::drop_fields('{$subjects[1]}', array(
 $field_down_str
 		));
 DOWN;
@@ -284,12 +284,12 @@ DOWN;
 		$field_up_str = str_replace('array(', 'array(\'name\' => \''.$subjects[1].'\', ', $field_up_str);
 
 		$up = <<<UP
-		\DBUtil::modify_fields('{$table}', array(
+		DBUtil::modify_fields('{$table}', array(
 $field_up_str
 		));
 UP;
 		$down = <<<DOWN
-	\DBUtil::modify_fields('{$table}', array(
+	DBUtil::modify_fields('{$table}', array(
 $field_down_str
 		));
 DOWN;
@@ -314,15 +314,36 @@ DOWN;
 		}
 
 		$up = <<<UP
-		\DBUtil::rename_table('{$subjects[0]}', '{$subjects[1]}');
+		DBUtil::rename_table('{$subjects[0]}', '{$subjects[1]}');
 UP;
 
 		$down = <<<DOWN
-		\DBUtil::rename_table('{$subjects[1]}', '{$subjects[0]}');
+		DBUtil::rename_table('{$subjects[1]}', '{$subjects[0]}');
 DOWN;
 
 		return array($up, $down);
 	}
+
+    /**
+     * Generate the up and down migration code for adding raw sql queries
+     *
+     * oil command: raw_{thing}
+     *
+     * @param  array
+     * @param  array
+     *
+     * @return array(up, down)
+     */
+    public static function raw()
+    {
+        $up = <<<UP
+		DB::query('CREATE TABLE table ...')->execute();
+UP;
+        $down = <<<DOWN
+		DB::query('DROP TABLE table ...')->execute();
+DOWN;
+        return array($up, $down);
+    }
 
 	// helpers
 

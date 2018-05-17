@@ -845,7 +845,7 @@ VIEW;
 		$type = explode('_', $migration_name);
 
 		// tell the generator not to standardize the fieldlist for these types
-		if (in_array($type[0], array('add', 'delete', 'rename', 'drop')))
+		if (in_array($type[0], array('add', 'delete', 'rename', 'drop', 'raw')))
 		{
 			\Cli::set_option('no-standardisation', true);
 		}
@@ -1010,6 +1010,8 @@ VIEW;
 					break;
 				}
 
+                $use = ($method_name === 'raw') ? 'use Fuel\Core\DB;' : 'use Fuel\Core\DBUtil;';
+
 				// Call the magic action which returns an array($up, $down) for the migration
 				$migration = call_user_func(__NAMESPACE__ . "\Generate_Migration_Actions::{$method_name}", $subjects, $args);
 			}
@@ -1032,17 +1034,19 @@ VIEW;
 
 namespace Fuel\Migrations;
 
+{$use}
+
 class {$migration_name}
 {
-	public function up()
-	{
+    public function up()
+    {
 {$up}
-	}
+    }
 
-	public function down()
-	{
+    public function down()
+    {
 {$down}
-	}
+    }
 }
 MIGRATION;
 
